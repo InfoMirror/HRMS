@@ -38,7 +38,7 @@ Thumbs.db
 
 # Folders #
 node_modules
-public\lib
+**/lib
 
 # Debug Files #
 npm-debug.txt

@@ -6,12 +6,13 @@ angular.module('angularRestfulAuth')
     .controller('HomeCtrl', ['$rootScope', '$scope','$http','$window','Main', function ($rootScope, $scope,$http,$window,Main) {
         $scope.m = 4;
 
+        $scope.employeeData={};
         $scope.init = function(){
             $scope.profile="Hello User";
         }
 
         $scope.signin = function () {
-           
+        //   alert(0);
                         var myParams = {
                             'clientid': '142159620286-m8khm27vosmf3ovj9lbgrtj1vqd52jtj.apps.googleusercontent.com',
                             'cookiepolicy': 'single_host_origin',
@@ -31,7 +32,7 @@ angular.module('angularRestfulAuth')
 
 
          $scope.loginCallback= function(result) {
-            
+            alert(0);
             if (result['status']['signed_in']) {
                 var request = gapi.client.plus.people.get({
                     'userId': 'me'
@@ -55,17 +56,31 @@ angular.module('angularRestfulAuth')
                     //alert(str);
                     $scope.profile = str;
                     if(resp["domain"]=='infoobjects.com'){
-                        alert('right user');
+                        //alert('right user');
                         
                         var formdata={
                             email:email
                         }
-                        alert(formdata['email']);
+                       // alert(formdata['email']);
+                        /*$scope.login = function(){
+                            $http.post('/login',formdata)
+                            .success(function (data){
+                                $scope.employeeData = data;
+                                alert($scope.employeeData);
+                            })
+                            .error(function(data){
+                                console.log('Error: '+data);
+                            });
+                        };*/
                         Main.login(formdata,function(res){
+                            alert(res);
+                            $scope.profiledetail=res;
+                            alert($scope.profiledetail);
                                $location.path('/home');
                         });
+                       // alert(resut);
                     }else{
-                        alert('wrong user');
+                       
                          gapi.auth.signOut();
     location.reload();
                     }

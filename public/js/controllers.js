@@ -3,16 +3,16 @@
 /* Controllers */
 
 angular.module('angularRestfulAuth')
-    .controller('HomeCtrl', ['$rootScope', '$scope','$http','$window','Main', function ($rootScope, $scope,$http,$window,Main) {
+    .controller('HomeCtrl', ['$rootScope', '$scope','$http','$window','Main','$location', function ($rootScope, $scope,$http,$window,Main,$location) {
         $scope.m = 4;
-
+        alert();
         $scope.employeeData={};
+        $scope.profiledetail='Hello User';
         $scope.init = function(){
             $scope.profile="Hello User";
         }
 
         $scope.signin = function () {
-        //   alert(0);
                         var myParams = {
                             'clientid': '142159620286-m8khm27vosmf3ovj9lbgrtj1vqd52jtj.apps.googleusercontent.com',
                             'cookiepolicy': 'single_host_origin',
@@ -20,19 +20,13 @@ angular.module('angularRestfulAuth')
                             'approvalprompt': 'force',
                             'scope': 'https://www.googleapis.com/auth/plus.login https://www.googleapis.com/auth/plus.profile.emails.read'
                         };
-            /*
-            $http.get('http://localhost:9006/#/signin/dosignin', {
-                "msg": "hi"
-            }).success(function (data) {
-                console.log(data);
-            });*/
             gapi.auth.signIn(myParams);
         };
 
 
 
          $scope.loginCallback= function(result) {
-            alert(0);
+           // alert(0);
             if (result['status']['signed_in']) {
                 var request = gapi.client.plus.people.get({
                     'userId': 'me'
@@ -73,10 +67,10 @@ angular.module('angularRestfulAuth')
                             });
                         };*/
                         Main.login(formdata,function(res){
-                            alert(res);
-                            $scope.profiledetail=res;
+                           // alert(res.data.UserId);
+                            $scope.profiledetail=JSON.stringify(res.data);
                             alert($scope.profiledetail);
-                               $location.path('/home');
+                               $location.path('/');
                         });
                        // alert(resut);
                     }else{
@@ -106,35 +100,7 @@ $scope.logout= function()
         }
         
         $scope.init();
-        //  $scope.signup = function() {
-        //     var formData = {
-        //        email: $scope.email,
-        //       password: $scope.password
-        //   }
-
-        //    Main.save(formData, function(res) {
-        //        $localStorage.token = res.data.token;
-        //       $location.path('/me');
-        //  }, function() {
-        //     $rootScope.error = 'Failed to signup';
-        //  })
-        // };
-
-        //  $scope.me = function() {
-        //    Main.me(function(res) {
-        //         $scope.myDetails = res;
-        //     }, function() {
-        //        $rootScope.error = 'Failed to fetch details';
-        //    })
-        //  };
-
-        // $scope.logout = function() {
-        //  Main.logout(function() {
-        //      $location.path('/');
-        //  }, function() {
-        //     $rootScope.error = 'Failed to logout';
-        // });
-        //  };
+       
     }])
 
 .controller('MeCtrl', ['$rootScope', '$scope', '$location', 'Main', function ($rootScope, $scope, $location, Main) {

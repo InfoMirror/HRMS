@@ -12,12 +12,12 @@ app.use(function(req, res, next) {
 });
 var config="Driver={SQL Server Native Client 11.0};Server={tcp:MAYANK-PC,49172};User={mayank};Password={1234};Database={dbHRMS};Trusted_Connection={Yes};";
 
-app.post('/login',function(res,req){
-console.log("done");
+app.post('/login',function(req,res){
+
    
  sql.open(config, function (err, conn) {
-       console.log(res.body.email);
-          var tableObjectValue  = new Array("SelectByUserName",res.body.email,"");
+      // console.log(req.body.email);
+          var tableObjectValue  = new Array("SelectByUserName",req.body.email,"");
             var pm = conn.procedureMgr();
             pm.callproc('sp_SelectDeleteLogin',tableObjectValue , function(err, results, output) {
                 if(err){
@@ -25,15 +25,29 @@ console.log("done");
                     console.log(err);
                 }else{
                    if(results.length>0){
-                       /*res.send(selectEmployeeDetails(results[0].Email));*/
-                       //console.log(results);
-                       //var employeeData = selectEmployeeDetails(results[0].Email);
-                      // console.log(empData);
-                    //   console.log("Employee Data: ");
-                       //console.log(employeeData);
-                    ///return  selectEmployeeDetails(results[0].Email);
-                       return results;
-                       console.log("111");
+                      
+                      sql.open(config, function (err, conn) {
+     //  console.log(res.body.email);
+                       //   console.log(results[0].Email);
+          var tableObjectValue  = new Array("SelectByEmail",results[0].Email);
+            var pm = conn.procedureMgr();
+            pm.callproc('sp_SelectDeleteEmployeeDetails',tableObjectValue , function(err, result1, output) {
+                if(err){
+                    console.log(err);
+                }else{
+                   res.json({
+                           type:true,
+                           data:result1
+                       });
+                }
+        });
+        if(err){
+            console.log('Connection Error: '+err);
+        }
+   
+       
+    
+    });
                    }
                 }
         });
